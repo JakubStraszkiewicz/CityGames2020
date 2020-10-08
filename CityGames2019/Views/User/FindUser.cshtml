@@ -1,0 +1,77 @@
+﻿@model IEnumerable<CityGames2019.Models.User>
+
+@{
+    ViewData["Title"] = "FindUser";
+}
+
+@using CityGames2019.Resources
+@inject LocService SharedLocalizer
+
+<h2>@SharedLocalizer.GetLocalizedHtmlString("SearchUser")</h2>
+<style>
+        img.profilePhoto {
+            width:60px;
+            height:60px;
+        }
+</style>
+
+<table class="table">
+    <thead>
+        <tr>
+            <form asp-controller="User" asp-action="FindUser">
+                <th></th>
+                <th>
+                    @SharedLocalizer.GetLocalizedHtmlString("Username")
+                    <input type="text" name="username" placeholder="@SharedLocalizer.GetLocalizedHtmlString("Username")">
+                </th>
+                <th>
+                    Email
+                    <input type="text" name="email" placeholder="Email">
+                </th>
+                <th>
+                    @SharedLocalizer.GetLocalizedHtmlString("Name")
+                    <input type="text" name="name" placeholder="@SharedLocalizer.GetLocalizedHtmlString("Name")">
+                </th>
+                <th>
+                    @SharedLocalizer.GetLocalizedHtmlString("Surname")
+                    <input type="text" name="surname" placeholder="@SharedLocalizer.GetLocalizedHtmlString("Surname")">
+                </th>
+                <th>
+                    <input type="submit" value="@SharedLocalizer.GetLocalizedHtmlString("Find")" />
+                </th>
+            </form>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @if (item.Photo == null)
+                {
+                    <img src="~/images/profilePhotoDefault.jpg" class="profilePhoto" />
+                }
+                else
+                {
+                    <img src="@Url.Action("RenderImageForUser", new { id = item.UserName })" class="profilePhoto" />
+                }
+            </td>
+            <td>
+                @item.UserName
+            </td>
+            <td>
+                @item.Email
+            </td>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.Surname
+            </td>
+            <td>
+                <a asp-action="Index" asp-route-id="@item.Id">@SharedLocalizer.GetLocalizedHtmlString("ShowGames")</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

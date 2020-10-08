@@ -1,0 +1,117 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using CityGames2019.Resources
+
+@using System.IO
+@model IEnumerable<CityGames2019.Models.Game>
+
+@inject UserManager<User> UserManager
+@inject LocService SharedLocalizer
+
+@{
+    ViewData["Title"] = "Homepage";
+}
+
+<!doctype html>
+<html>
+<head>
+    <style>
+        .menu {
+        }
+
+        img.gamepicture {
+            width:inherit;
+            height:100%;
+        }
+
+        ul.menu > li {
+            border: 1px solid black
+        }
+
+        .gameboxContainer{
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .gamebox {
+            text-align: center;
+            width: 18%;
+            height: auto;
+            margin: 1%;
+            padding-bottom: 5%;
+        }
+
+        div.gamebox > a{
+            width:100%;
+        }
+
+    </style>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+@{
+    string currentUserName = ViewBag.GetCurrentViewUsername();
+    bool thisIsLoggedUserGames = ViewBag.IsThisLoggedUserGamesView();
+}
+<body>
+    <div class="row">
+        @if (thisIsLoggedUserGames)
+        {
+            <h3>@SharedLocalizer.GetLocalizedHtmlString("YourGames")</h3>
+        }
+        else
+        {
+            <h3>@SharedLocalizer.GetLocalizedHtmlString("UserGames") @Html.Raw(currentUserName)</h3>
+        }
+
+        <div class="gameboxContainer">
+            @if (thisIsLoggedUserGames)
+            {
+            <div class="gamebox">
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                    <img src="~/images/add_new_game.png" class="gamepicture" />
+                </a>
+            </div>
+            }
+
+            @foreach (Game game in Model)
+            {
+                <div class="gamebox">
+                    @if (game.Photo != null)
+                    {
+                        <a asp-area="" asp-controller="Home" asp-action="About">
+                            <img src="@Url.Action("RenderImage", new { id = game.Id })" class="gamepicture" />
+                        </a>
+                    }
+                    else
+                    {
+                        //dostęp do każdej gry
+                        <a asp-area="" asp-controller="Home" asp-action="About">
+                            <img src="~/images/gamePhotoDefault2.png" class="gamepicture" />
+                        </a>
+                    }
+                    <p style="padding:1%">@game.Name</p>
+                    @if (game.CreatorId == UserManager.GetUserId(User))
+                    {
+                        <a class="btn btn-default" asp-area="" asp-controller="Home" asp-action="About">
+                            @SharedLocalizer.GetLocalizedHtmlString("ModifyGame")
+                        </a>
+                    }
+                </div>
+            }
+
+            @{
+                /*
+                @for (int i = 0; i < 5; i++)
+                {
+                <a asp-area="" asp-controller="Home" asp-action="About">
+                    <img src="~/images/test_game_picture.png" class="gamepicture" />
+                </a>
+                }
+                */
+            }
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,23 @@
+﻿@page
+@using CityGames2019.Resources
+@inject LocService SharedLocalizer
+@model PersonalDataModel
+@{
+    ViewData["Title"] = SharedLocalizer.GetLocalizedHtmlString("PersonalData");
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+
+<h4>@ViewData["Title"]</h4>
+
+<div class="row">
+    <div class="col-md-6">
+        <p>@SharedLocalizer.GetLocalizedHtmlString("PersonalDataInfo1")</p>
+        <form asp-page="DownloadPersonalData" method="post" class="form-group">
+            <button class="btn btn-default" type="submit">@SharedLocalizer.GetLocalizedHtmlString("Download")</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
